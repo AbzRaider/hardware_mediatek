@@ -1,0 +1,27 @@
+cc_library_shared {
+    name: "android.hardware.power-service-mediatek",
+    vendor: true,
+    compile_multilib: "64",
+    srcs: [
+        "Power.cpp",
+    ],
+    shared_libs: [
+        "libbase",
+        "libbinder_ndk",
+        "android.hardware.power-V2-ndk",
+    ],
+    vintf_fragments: [
+        "power-mtk.xml",
+    ],
+    cflags: [
+        "-DTAP_TO_WAKE_NODE=\"$(TARGET_TAP_TO_WAKE_NODE)\"",
+    ],
+    target: {
+        android_arm64: {
+            srcs: [
+                "power-mode.cpp",
+            ],
+            cflags: ["-DMODE_EXT"],
+        },
+    },
+}
