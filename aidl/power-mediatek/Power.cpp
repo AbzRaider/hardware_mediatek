@@ -53,7 +53,12 @@ Power::Power() {
 
     mPerf->perfLib = dlopen(POWERHAL_LIB_NAME, RTLD_LAZY);
     if (!mPerf->perfLib) {
-        LOG(ERROR) << "Could not dlopen " << POWERHAL_LIB_NAME;
+        const char* dlopen_error = dlerror(); // Get the error description from dlerror
+        if (dlopen_error) {
+            LOG(ERROR) << "Could not dlopen " << POWERHAL_LIB_NAME << ": " << dlopen_error;
+        } else {
+            LOG(ERROR) << "Could not dlopen " << POWERHAL_LIB_NAME << ": Unknown error.";
+        }
         abort();
     }
 
