@@ -138,7 +138,7 @@ ndk::ScopedAStatus Power::setMode(Mode type, bool enabled) {
         return ndk::ScopedAStatus::ok();
     }
 #endif
-    switch (type) {
+switch (type) {
 #ifdef TAP_TO_WAKE_NODE
         case Mode::DOUBLE_TAP_TO_WAKE: {
             ::android::base::WriteStringToFile(enabled ? "1" : "0", TAP_TO_WAKE_NODE, true);
@@ -153,7 +153,7 @@ ndk::ScopedAStatus Power::setMode(Mode type, bool enabled) {
 
             if (enabled) {
                 mLaunchHandle =
-                        mPerf->CusLockHint(MTKPOWER_HINT_LAUNCH, kLaunchBoostDuration, getpid());
+                    mPerf->CusLockHint(MTKPOWER_HINT_LAUNCH, kLaunchBoostDuration, getpid());
             }
             break;
         }
@@ -163,11 +163,23 @@ ndk::ScopedAStatus Power::setMode(Mode type, bool enabled) {
                 // resume all previously performing hints.
                 mPerf->UserScnRestoreAll();
             } else {
-                // Device is entering a non interactive state,
+                // Device is entering a non-interactive state,
                 // disable all hints to save power.
                 mPerf->UserScnDisableAll();
             }
-            break;
+            break;  
+        }
+        case Mode::SUSTAINED_PERFORMANCE: {
+            if (mSustainedPerfHandle > 0) {
+                mPerf->LockRel(mSustainedPerfHandle);
+                mSustainedPerfHandle = 0;
+            }
+            if (enabled) {
+                mSustainedPerfHandle = mPerf->CusLockHint(
+                    MTKPOWER_HINT_SUSTAINED_PERFORMANCE, 0 /* durationMs (0 for indefinite) */, getpid()
+                );
+            }
+            break;  
         }
         default:
             break;
