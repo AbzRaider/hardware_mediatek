@@ -50,6 +50,7 @@ class Power : public BnPower {
     int32_t mPreviousInteractionDuration;
     int32_t mPreviousInteractionHandle;
     int32_t mLaunchHandle;
+    int32_t mSustainedPerfHandle;
 };
 
 }  // namespace mediatek
