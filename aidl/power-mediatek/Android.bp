@@ -28,6 +28,7 @@ mediatek_power_defaults {
             whole_static_libs: ["%s"],
         },
     },
+    srcs: ["power-mode.cpp"],
 }
 
 cc_library_shared {
